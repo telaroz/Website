@@ -1,0 +1,24 @@
+---
+date: "2021-01-11T21:05:33+05:30"
+title: About me
+---
+
+Costa Rican National Handball Team since 2014.
+
+I'm an actuary using my statistic and programming knowledge to analyse handball data. 
+
+![My picture][1]
+
+
+
+#### Education
+
+* Data ScienceTech Institute, (2020 - Ongoing).
+
+   Applied MSc in Data Science & Artificial Intelligence.
+   
+* Universidad de Costa Rica, School of Mathematics (2013 - 2018).
+
+    Bachelor of Science, Actuarial Science.
+
+[1]: /img/about.jfif
