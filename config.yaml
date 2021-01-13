@@ -1,5 +1,4 @@
 baseurl: https://telaroz.netlify.app/
-title: Handball and Data
 theme: hugo-nederburg-theme
 languageCode: en-us
 disqusShortname: ''
@@ -7,6 +6,7 @@ googleAnalytics: ''
 preserveTaxonomyNames: yes
 paginate: 5
 defaultContentLanguage: en
+defaultContentLanguageInSubdir: no
 privacy:
   googleAnalytics:
     anonymizeIP: no
@@ -15,6 +15,8 @@ privacy:
     useSessionStorage: no
 languages:
   en:
+    title: Handball and Data
+    contentDir: content/en
     params:
       author: Valery Zúñiga
       authorLink: https://telaroz.netlify.app/
@@ -47,9 +49,12 @@ languages:
           url: contact/
           weight: 3
     weight: 1
-  fr:
+  sp:
+    title: Balonmano y Datos
+    contentDir: content/sp
     params:
       author: Valery Zúñiga
+      title: Handball and Data
       authorLink: https://telaroz.netlify.app/
       copyright:
       description: Handball and #rstats
