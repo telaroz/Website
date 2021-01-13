@@ -6,40 +6,77 @@ disqusShortname: ''
 googleAnalytics: ''
 preserveTaxonomyNames: yes
 paginate: 5
+defaultContentLanguage: en
 privacy:
   googleAnalytics:
     anonymizeIP: no
     disable: no
     respectDoNotTrack: no
     useSessionStorage: no
-params:
-  author: Valery Zúñiga
-  authorLink: https://telaroz.netlify.app/
-  copyright:
-  description: Handball and #rstats
-  email: telaroz@gmail.com
-  slogan: 
-  social:
-    email: telaroz@gmail.com
-    github: https://github.com/telaroz/
-    stackoverflow: https://stackoverflow.com/users/9905964/telaroz
-    twitter: https://twitter.com/telaroz/
-  writers:
-    Valery Zúñiga:
-      bio: Handball player and data analyst
-      email: telaroz@gmail.comom
-      github: https://github.com/telaroz/
-      link: https://telaroz.netlify.app/
-      stackoverflow: https://stackoverflow.com/users/9905964/telaroz
-      twitter:  https://twitter.com/telaroz/
-menu:
-  main:
-    - name: Home
-      url: /
-      weight: 1
-    - name: About
-      url: about/
-      weight: 2
-    - name: Get in touch
-      url: contact/
-      weight: 3
+languages:
+  en:
+    params:
+      author: Valery Zúñiga
+      authorLink: https://telaroz.netlify.app/
+      copyright:
+      description: Handball and #rstats
+      email: telaroz@gmail.com
+      slogan: 
+      social:
+        email: telaroz@gmail.com
+        github: https://github.com/telaroz/
+        stackoverflow: https://stackoverflow.com/users/9905964/telaroz
+        twitter: https://twitter.com/telaroz/
+      writers:
+        Valery Zúñiga:
+          bio: Handball player and data analyst
+          email: telaroz@gmail.comom
+          github: https://github.com/telaroz/
+          link: https://telaroz.netlify.app/
+          stackoverflow: https://stackoverflow.com/users/9905964/telaroz
+          twitter:  https://twitter.com/telaroz/
+    menu:
+      main:
+        - name: Home
+          url: /
+          weight: 1
+        - name: About
+          url: about/
+          weight: 2
+        - name: Get in touch
+          url: contact/
+          weight: 3
+    weight: 1
+  fr:
+    params:
+      author: Valery Zúñiga
+      authorLink: https://telaroz.netlify.app/
+      copyright:
+      description: Handball and #rstats
+      email: telaroz@gmail.com
+      slogan: 
+      social:
+        email: telaroz@gmail.com
+        github: https://github.com/telaroz/
+        stackoverflow: https://stackoverflow.com/users/9905964/telaroz
+        twitter: https://twitter.com/telaroz/
+      writers:
+        Valery Zúñiga:
+          bio: Handball player and data analyst
+          email: telaroz@gmail.comom
+          github: https://github.com/telaroz/
+          link: https://telaroz.netlify.app/
+          stackoverflow: https://stackoverflow.com/users/9905964/telaroz
+          twitter:  https://twitter.com/telaroz/
+    menu:
+      main:
+        - name: Home
+          url: /
+          weight: 1
+        - name: About
+          url: about/
+          weight: 2
+        - name: Get in touch
+          url: contact/
+          weight: 3
+    weight: 2
