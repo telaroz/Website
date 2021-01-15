@@ -17,6 +17,8 @@ languages:
   en:
     title: Handball and Data
     contentDir: content/en
+    languageName: English
+    languageCode: en
     params:
       author: Valery Zúñiga
       authorLink: https://telaroz.netlify.app/
@@ -52,6 +54,8 @@ languages:
   sp:
     title: Balonmano y Datos
     contentDir: content/sp
+    languageName: Espanol
+    languageCode: sp
     params:
       author: Valery Zúñiga
       title: Handball and Data

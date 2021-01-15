@@ -26,7 +26,7 @@ draw_circle <- function(center = c(0, 0),
   
   tt <- seq(start*pi, end*pi, length.out = npoints)
   
-  data.table::data.table(
+  data.frame(
     x = center[1] + diameter / 2 * cos(tt),
     y = center[2] + diameter / 2 * sin(tt)
   )
@@ -35,7 +35,7 @@ draw_circle <- function(center = c(0, 0),
 
 ```
 
-Now, we can define each line: 
+Now, we can define each line of the court: 
 
 
 ```{r}
