@@ -157,9 +157,9 @@ We are ready to pass these lines to a ggplot for a complete court.
 Let's create a function so we can have some parameters for our court and then ease to call our plot.
 
 As parameters:
-- $vertical$: If we want to see a vertical plot
-- $flip$: Flips the plot 180°
-- $plotly$: Indicates if we want a plotly instead of a classic ggplot. 
+- vertical: If we want to see a vertical plot
+- flip: Flips the plot 180°
+- plotly: Indicates if we want a plotly instead of a classic ggplot. 
 
 ```{r}
 court <- function(vertical = FALSE, flip = FALSE, plotly = FALSE){
@@ -267,10 +267,10 @@ shots <-
 ```
 
 
-Now we just generate out court and then add new layers.
+Now we just generate out court and then add our new layer.
 ```{r}
 court() +
-      geom_point(data = shots, aes(x, y), color = ifelse(shots$goal == 1, 'Green', 'Red'), size = 6)
+      geom_point(data = shots, aes(x, y), color = ifelse(shots$goal == 1, 'Green', 'Red'), size = 4)
 ```
 
 
