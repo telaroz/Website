@@ -267,7 +267,7 @@ shots <-
 ```
 
 
-
+Now we just generate out court and then add new layers.
 ```{r}
 campo() +
       geom_point(data = shots, aes(x, y), color = ifelse(shots$goal == 1, 'Green', 'Red'), size = 6)
