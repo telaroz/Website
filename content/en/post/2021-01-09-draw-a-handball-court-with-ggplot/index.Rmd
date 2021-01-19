@@ -90,11 +90,8 @@ quart_circle6_2_2 <-
               diameter = 12,
               start = 0.5, end = 1)
 
-# line 
-free_thr9_1 <- 
-  data.frame(x = c(-11, -11),
-             y = c(-1.5, 1.5))
 
+# Both 9m circles will be linked by a straight 3m line 
 
 free_thr9_1_1 <- 
   draw_circle(center = c(-20, -1.5),
@@ -106,12 +103,10 @@ free_thr9_1_2 <-
               diameter = 18, 
               start = 0, end = 0.38)
 
-free_thr_compl1 <- rbind(free_thr9_1_1, free_thr9_1, free_thr9_1_2)
+free_thr_compl1 <- rbind(free_thr9_1_1, free_thr9_1_2)
 
-# line 
-free_thr9_2 <- 
-  data.frame(x = c(11, 11),
-             y = c(-1.5, 1.5))
+
+# Both 9m circles will be linked by a straight 3m line 
 
 free_thr9_2_1 <- 
   draw_circle(center = c(20, -1.5),
@@ -123,7 +118,9 @@ free_thr9_2_2 <-
               diameter = 18, 
               start = 0.62, end = 1)
 
-free_thr_compl2 <- rbind(free_thr9_2_2, free_thr9_2, free_thr9_2_1)
+free_thr_compl2 <- rbind(free_thr9_2_2, free_thr9_2_1)
+
+
 
 goal_restr_1 <-
   data.frame(x = c(-16, -16),
@@ -192,6 +189,7 @@ court <- function(vertical = FALSE, flip = FALSE, plotly = FALSE){
     geom_path(data = quart_circle6_2_1, size = 1) +
     geom_path(data = quart_circle6_2_2, size = 1) +
     geom_path(data = free_thr_compl1, linetype = 'dashed', size = 1) +
+    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1) +
     geom_path(data = goal_restr_1, size = 1) +
     geom_path(data = goal_restr_2, size = 1) +
     geom_path(data = sevenm_1, size = 1) +
@@ -229,9 +227,7 @@ half_court <- function(vertical = TRUE, flip = FALSE, plotly = FALSE){
     geom_path(data = front6_2, size = 1) +
     geom_path(data = quart_circle6_2_1, size = 1) +
     geom_path(data = quart_circle6_2_2, size = 1) +
-    geom_path(data = free_thr9_2, linetype = 'dashed', size = 1) +
-    geom_path(data = free_thr9_2_1, linetype = 'dashed', size = 1) +
-    geom_path(data = free_thr9_2_2, linetype = 'dashed', size = 1) +
+    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1) +
     geom_path(data = goal_restr_2, size = 1) +
     geom_path(data = sevenm_2, size = 1) +
     coord_fixed() +
