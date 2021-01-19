@@ -192,13 +192,6 @@ court <- function(vertical = FALSE, flip = FALSE, plotly = FALSE){
     geom_path(data = quart_circle6_2_1, size = 1) +
     geom_path(data = quart_circle6_2_2, size = 1) +
     geom_path(data = free_thr_compl1, linetype = 'dashed', size = 1) +
-    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1) +
-  #  geom_path(data = free_thr9_1, linetype = 'dashed', size = 1) +
- #   geom_path(data = free_thr9_2, linetype = 'dashed', size = 1) +
-   # geom_path(data = free_thr9_1_1, linetype = 'dashed', size = 1) +
-  #  geom_path(data = free_thr9_1_2, linetype = 'dashed', size = 1) +
-  #  geom_path(data = free_thr9_2_1, linetype = 'dashed', size = 1) +
-   # geom_path(data = free_thr9_2_2, linetype = 'dashed', size = 1) +
     geom_path(data = goal_restr_1, size = 1) +
     geom_path(data = goal_restr_2, size = 1) +
     geom_path(data = sevenm_1, size = 1) +
@@ -250,7 +243,7 @@ half_court <- function(vertical = TRUE, flip = FALSE, plotly = FALSE){
 }
 ```
 
-No we draw a court:
+Now we draw a court:
 ```{r}
 court(plotly = TRUE)
 
