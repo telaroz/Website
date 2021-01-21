@@ -150,6 +150,10 @@ side_and_goal_lines_half <-
   data.frame(x = c(5, 20, 20, 5, 5),
              y = c(-10, -10, 10, 10, -10))
 
+six_m1 <- rbind(quart_circle6_1_1, quart_circle6_1_2)
+
+six_m2 <- rbind(quart_circle6_2_1, quart_circle6_2_2)
+
 
 ```
 
@@ -162,10 +166,15 @@ As parameters:
 
 - flip: Flips the plot 180°
 
-- plotly: Indicates if we want a plotly instead of a classic ggplot. 
+- court_color: Parameter as a hex code or ggplot color name (for example: 'orange' or '#cfa03c') for the court
+
+- area_color: Parameter as a hex code or ggplot color name for the 6-meter area. 
+
+- lines_color: Parameter as a hex code or ggplot color name for all the lines 
 
 ```{r}
-court <- function(vertical = FALSE, flip = FALSE, plotly = FALSE){
+court <- function(vertical = FALSE, flip = FALSE, court_color = '#1871c9', 
+                  area_color = '#d1b111', lines_color = 'white'){
 
   make_flip <- NULL
   
@@ -177,29 +186,30 @@ court <- function(vertical = FALSE, flip = FALSE, plotly = FALSE){
            paste0('aes(', make_flip, 'x, ', 'y)'))
   
   
-  plot <- ggplot(mapping = eval(parse(text = type_of_plot))) +
-    geom_path(data = side_and_goal_lines, size = 1) +
-    geom_path(data = center_line, size = 1) +
+ plot <- ggplot(mapping = eval(parse(text = type_of_plot))) +
+    geom_path(data = side_and_goal_lines, size = 1, color = lines_color) +
+    geom_path(data = center_line, size = 1, color = lines_color) +
     geom_path(data = goal1, color = 'red', size = 1.5) +
     geom_path(data = goal2, color = 'red', size = 1.5) +
-    geom_path(data = front6_1, size = 1) +
-    geom_path(data = front6_2, size = 1) +
-    geom_path(data = quart_circle6_1_1, size = 1) +
-    geom_path(data = quart_circle6_1_2, size = 1) +
-    geom_path(data = quart_circle6_2_1, size = 1) +
-    geom_path(data = quart_circle6_2_2, size = 1) +
-    geom_path(data = free_thr_compl1, linetype = 'dashed', size = 1) +
-    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1) +
-    geom_path(data = goal_restr_1, size = 1) +
-    geom_path(data = goal_restr_2, size = 1) +
-    geom_path(data = sevenm_1, size = 1) +
-    geom_path(data = sevenm_2, size = 1) +
-    geom_path(data = substitution_1, size = 1) +
-    geom_path(data = substitution_2, size = 1) +
-    coord_fixed() + # We want to maintain the 40x20 proportion 
+    geom_polygon(data = side_and_goal_lines, fill = court_color) +
+    geom_polygon(data = six_m1, fill = area_color) +
+    geom_polygon(data = six_m2, fill = area_color) +
+    geom_path(data = front6_1, size = 1, color = lines_color) +
+    geom_path(data = front6_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_1_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_1_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_2, size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl1, linetype = 'dashed', size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1, color = lines_color) +
+    geom_path(data = goal_restr_1, size = 1, color = lines_color) +
+    geom_path(data = goal_restr_2, size = 1, color = lines_color) +
+    geom_path(data = sevenm_1, size = 1, color = lines_color) +
+    geom_path(data = sevenm_2, size = 1, color = lines_color) +
+    geom_path(data = substitution_1, size = 1, color = lines_color) +
+    geom_path(data = substitution_2, size = 1, color = lines_color) +
+    coord_fixed() + # We want to maintain the 40x20 proportion
     theme_void()
-  
-  if(plotly) plot <- plotly::ggplotly(plot)
   
   return(plot)
 }
@@ -209,7 +219,8 @@ court <- function(vertical = FALSE, flip = FALSE, plotly = FALSE){
 And half a court with the same parameters. 
 
 ```{r}
-half_court <- function(vertical = TRUE, flip = FALSE, plotly = FALSE){
+half_court <- function(vertical = TRUE, flip = FALSE, court_color = '#1871c9', 
+                       area_color = '#d1b111', lines_color = 'white'){
   
   make_flip <- NULL
   
@@ -222,18 +233,18 @@ half_court <- function(vertical = TRUE, flip = FALSE, plotly = FALSE){
   
   
   plot <- ggplot(mapping = eval(parse(text = type_of_plot))) +
-    geom_path(data = side_and_goal_lines_half, size = 1) +
+    geom_path(data = side_and_goal_lines_half, size = 1, color = lines_color) +
+    geom_polygon(data = side_and_goal_lines_half, fill = court_color) +
+    geom_polygon(data = six_m2, fill = area_color) +
     geom_path(data = goal2, color = 'red', size = 1.5) +
-    geom_path(data = front6_2, size = 1) +
-    geom_path(data = quart_circle6_2_1, size = 1) +
-    geom_path(data = quart_circle6_2_2, size = 1) +
-    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1) +
-    geom_path(data = goal_restr_2, size = 1) +
-    geom_path(data = sevenm_2, size = 1) +
+    geom_path(data = front6_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_2, size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1, color = lines_color) +
+    geom_path(data = goal_restr_2, size = 1, color = lines_color) +
+    geom_path(data = sevenm_2, size = 1, color = lines_color) +
     coord_fixed() +
     theme_void()
-  
-  if(plotly) plot <- plotly::ggplotly(plot)
   
   return(plot)
 }
@@ -241,7 +252,7 @@ half_court <- function(vertical = TRUE, flip = FALSE, plotly = FALSE){
 
 Now we draw a court:
 ```{r}
-court(plotly = TRUE)
+court()
 
 ```
 
@@ -249,7 +260,10 @@ And half a court:
 
 
 ```{r}
-half_court(vertical = TRUE, flip = TRUE, plotly = FALSE)
+half_court(vertical = TRUE, flip = TRUE, 
+           court_color = 'orange',
+           area_color = 'darkgreen', 
+           lines_color = 'darkblue')
 ```
 
 As the code to generate the court in ggplot ends with a theme_void() call at the end of our function, we can extend this plot and add other information on top. 
@@ -267,7 +281,9 @@ shots <-
 Now we just generate out court and then add our new layer.
 ```{r}
 court() +
-      geom_point(data = shots, aes(x, y), color = ifelse(shots$goal == 1, 'Green', 'Red'), size = 4)
+      geom_point(data = shots, aes(x, y),
+                 color = ifelse(shots$goal == 1, 'Green', 'Red'),
+                 size = 4)
 ```
 
 
