@@ -188,10 +188,10 @@ court <- function(vertical = FALSE, flip = FALSE, court_color = '#1871c9',
   
  plot <- ggplot(mapping = eval(parse(text = type_of_plot))) +
     geom_path(data = side_and_goal_lines, size = 1, color = lines_color) +
-    geom_path(data = center_line, size = 1, color = lines_color) +
     geom_path(data = goal1, color = 'red', size = 1.5) +
     geom_path(data = goal2, color = 'red', size = 1.5) +
     geom_polygon(data = side_and_goal_lines, fill = court_color) +
+    geom_path(data = center_line, size = 1, color = lines_color) +
     geom_polygon(data = six_m1, fill = area_color) +
     geom_polygon(data = six_m2, fill = area_color) +
     geom_path(data = front6_1, size = 1, color = lines_color) +
