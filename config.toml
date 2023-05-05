@@ -3,7 +3,7 @@
 # ------------------------------------- #
 baseURL = "https://www.telaroz.com/"
 title = "Den"
-theme = "hugo-theme-den"
+theme = "hugo-nederburg-theme"
 #enableRobotsTXT = true       # generate robots.txt
 enableEmoji = true           # use emoji support
 hasCJKLanguage = true        # detect CJK languages for word count etc.
