@@ -1,0 +1,248 @@
+---
+title: Draw a handball court with ggplot
+author: Valery Zúñiga
+date: '2021-01-15'
+slug: draw-a-handball-court-with-ggplot
+categories:
+  - R
+  - handball
+  - visualization
+tags:
+  - ggplot
+  - handball
+  - rstats
+---
+
+
+
+<p>The strategy to draw a court is to define the different lines and use geom_path to draw each segment.
+For circles, we use the following function to create the x-y coordinates.
+For lines, we just define x-y start and end coordinates.</p>
+<pre class="r"><code>library(ggplot2)
+
+draw_circle &lt;- function(center = c(0, 0),
+                        diameter = 1, 
+                        npoints = 12000, 
+                        start = 0, 
+                        end = 2){
+  
+  tt &lt;- seq(start*pi, end*pi, length.out = npoints)
+  
+  data.frame(
+    x = center[1] + diameter / 2 * cos(tt),
+    y = center[2] + diameter / 2 * sin(tt)
+  )
+
+}</code></pre>
+<p>Now, we can define each line of the court.
+Our court dimensions go from -20 to 20 by -10 to 10, which would be 40x20.</p>
+<pre class="r"><code>side_and_goal_lines &lt;- 
+  data.frame(x = c(-20, 20, 20, -20, -20),
+             y = c(-10, -10, 10, 10, -10))
+
+center_line &lt;- 
+  data.frame(x = c(0, 0),
+             y = c(-10, 10))
+
+goal1 &lt;- 
+  data.frame(x = c(-20, -20),
+             y = c(-1.5, 1.5))
+
+goal2 &lt;- 
+  data.frame(x = c(20, 20),
+             y = c(-1.5, 1.5))
+
+
+front6_1 &lt;- 
+  data.frame(x = c(-14, -14),
+             y = c(-1.5, 1.5))
+
+front6_2 &lt;- 
+  data.frame(x = c(14, 14),
+             y = c(-1.5, 1.5))
+
+
+quart_circle6_1_1 &lt;- 
+  draw_circle(center = c(-20, -1.5), 
+              diameter = 12, 
+              start = 1.5, end = 2)
+
+quart_circle6_1_2 &lt;- 
+  draw_circle(center = c(-20, 1.5), 
+              diameter = 12, 
+              start = 0, end = 0.5)
+
+quart_circle6_2_1 &lt;- 
+  draw_circle(center = c(20, -1.5), 
+              diameter = 12, 
+              start = 1, end = 1.5)
+
+quart_circle6_2_2 &lt;- 
+  draw_circle(center = c(20, 1.5), 
+              diameter = 12,
+              start = 0.5, end = 1)
+
+
+# Both 9m circles will be linked by a straight 3m line 
+
+free_thr9_1_1 &lt;- 
+  draw_circle(center = c(-20, -1.5),
+              diameter = 18, 
+              start = 1.62, end = 2)
+
+free_thr9_1_2 &lt;- 
+  draw_circle(center = c(-20, 1.5),
+              diameter = 18, 
+              start = 0, end = 0.38)
+
+free_thr_compl1 &lt;- rbind(free_thr9_1_1, free_thr9_1_2)
+
+
+# Both 9m circles will be linked by a straight 3m line 
+
+free_thr9_2_1 &lt;- 
+  draw_circle(center = c(20, -1.5),
+              diameter = 18, 
+              start = 1, end = 1.38)
+
+free_thr9_2_2 &lt;- 
+  draw_circle(center = c(20, 1.5), 
+              diameter = 18, 
+              start = 0.62, end = 1)
+
+free_thr_compl2 &lt;- rbind(free_thr9_2_2, free_thr9_2_1)
+
+
+
+goal_restr_1 &lt;-
+  data.frame(x = c(-16, -16),
+             y = c(-0.075, 0.075))
+
+goal_restr_2 &lt;-
+  data.frame(x = c(16, 16),
+             y = c(-0.075, 0.075))
+
+sevenm_1 &lt;- 
+  data.frame(x = c(-13, -13),
+             y = c(-0.5, 0.5))
+
+sevenm_2 &lt;-
+  data.frame(x = c(13, 13),
+             y = c(-0.5, 0.5))
+
+substitution_1 &lt;- 
+  data.frame(x = c(-4.5, -4.5),
+             y = c(-10.15, -9.85))
+
+substitution_2 &lt;- 
+  data.frame(x = c(4.5, 4.5),
+             y = c(-10.15, -9.85))
+
+side_and_goal_lines_half &lt;- 
+  data.frame(x = c(5, 20, 20, 5, 5),
+             y = c(-10, -10, 10, 10, -10))
+
+six_m1 &lt;- rbind(quart_circle6_1_1, quart_circle6_1_2)
+
+six_m2 &lt;- rbind(quart_circle6_2_1, quart_circle6_2_2)</code></pre>
+<p>We are ready to pass these lines to a ggplot for a complete court.
+Let’s create a function so we can make small modification to the plot with some parameters and to make easy to calls to our plot creation</p>
+<p>As parameters:</p>
+<ul>
+<li><p>vertical: If we want to see a vertical plot</p></li>
+<li><p>flip: Flips the plot 180°</p></li>
+<li><p>court_color: Parameter as a hex code or ggplot color name (for example: ‘orange’ or ‘#cfa03c’) for the court</p></li>
+<li><p>area_color: Parameter as a hex code or ggplot color name for the 6-meter area.</p></li>
+<li><p>lines_color: Parameter as a hex code or ggplot color name for all the lines</p></li>
+</ul>
+<pre class="r"><code>court &lt;- function(vertical = FALSE, flip = FALSE, court_color = &#39;#1871c9&#39;, 
+                  area_color = &#39;#d1b111&#39;, lines_color = &#39;white&#39;){
+
+  make_flip &lt;- NULL
+  
+  if(flip) make_flip &lt;- &#39;-&#39;
+  
+  type_of_plot &lt;- 
+    ifelse(vertical,
+           paste0(&#39;aes(y, &#39;, make_flip, &#39;x)&#39;),
+           paste0(&#39;aes(&#39;, make_flip, &#39;x, &#39;, &#39;y)&#39;))
+  
+  
+ plot &lt;- ggplot(mapping = eval(parse(text = type_of_plot))) +
+    geom_path(data = side_and_goal_lines, size = 1, color = lines_color) +
+    geom_path(data = goal1, color = &#39;red&#39;, size = 1.5) +
+    geom_path(data = goal2, color = &#39;red&#39;, size = 1.5) +
+    geom_polygon(data = side_and_goal_lines, fill = court_color) +
+    geom_path(data = center_line, size = 1, color = lines_color) +
+    geom_polygon(data = six_m1, fill = area_color) +
+    geom_polygon(data = six_m2, fill = area_color) +
+    geom_path(data = front6_1, size = 1, color = lines_color) +
+    geom_path(data = front6_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_1_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_1_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_2, size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl1, linetype = &#39;dashed&#39;, size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl2, linetype = &#39;dashed&#39;, size = 1, color = lines_color) +
+    geom_path(data = goal_restr_1, size = 1, color = lines_color) +
+    geom_path(data = goal_restr_2, size = 1, color = lines_color) +
+    geom_path(data = sevenm_1, size = 1, color = lines_color) +
+    geom_path(data = sevenm_2, size = 1, color = lines_color) +
+    geom_path(data = substitution_1, size = 1, color = lines_color) +
+    geom_path(data = substitution_2, size = 1, color = lines_color) +
+    coord_fixed() + # We want to maintain the 40x20 proportion
+    theme_void()
+  
+  return(plot)
+}</code></pre>
+<p>And half a court with the same parameters.</p>
+<pre class="r"><code>half_court &lt;- function(vertical = TRUE, flip = FALSE, court_color = &#39;#1871c9&#39;, 
+                       area_color = &#39;#d1b111&#39;, lines_color = &#39;white&#39;){
+  
+  make_flip &lt;- NULL
+  
+  if(flip) make_flip &lt;- &#39;-&#39;
+  
+  type_of_plot &lt;- 
+    ifelse(vertical,
+           paste0(&#39;aes(y, &#39;, make_flip, &#39;x)&#39;),
+           paste0(&#39;aes(&#39;, make_flip, &#39;x, &#39;, &#39;y)&#39;))
+  
+  
+  plot &lt;- ggplot(mapping = eval(parse(text = type_of_plot))) +
+    geom_path(data = side_and_goal_lines_half, size = 1, color = lines_color) +
+    geom_polygon(data = side_and_goal_lines_half, fill = court_color) +
+    geom_polygon(data = six_m2, fill = area_color) +
+    geom_path(data = goal2, color = &#39;red&#39;, size = 1.5) +
+    geom_path(data = front6_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_2, size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl2, linetype = &#39;dashed&#39;, size = 1, color = lines_color) +
+    geom_path(data = goal_restr_2, size = 1, color = lines_color) +
+    geom_path(data = sevenm_2, size = 1, color = lines_color) +
+    coord_fixed() +
+    theme_void()
+  
+  return(plot)
+}</code></pre>
+<p>Now we draw a court:</p>
+<pre class="r"><code>court()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>And half a court:</p>
+<pre class="r"><code>half_court(vertical = TRUE, flip = TRUE, 
+           court_color = &#39;orange&#39;,
+           area_color = &#39;darkgreen&#39;, 
+           lines_color = &#39;darkblue&#39;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>As the code to generate the court in ggplot ends with a theme_void() call at the end of our function, we can extend this plot and add other information on top.</p>
+<p>For example, let’s generate some data on where some shots were taken and if they were a goal or not:</p>
+<pre class="r"><code>shots &lt;-
+  data.frame(x = c(-13, -12, 11, -11, 9.5),
+             y = c(2, 5, -3, -1, 0),
+             goal = c(1, 0, 1, 1, 0))</code></pre>
+<p>Now we just generate out court and then add our new layer.</p>
+<pre class="r"><code>court() +
+      geom_point(data = shots, aes(x, y),
+                 color = ifelse(shots$goal == 1, &#39;Green&#39;, &#39;Red&#39;),
+                 size = 4)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>

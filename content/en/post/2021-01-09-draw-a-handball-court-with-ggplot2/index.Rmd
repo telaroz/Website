@@ -1,0 +1,293 @@
+---
+title: Draw a handball court with ggplot
+author: Valery Zúñiga
+date: '2021-01-15'
+slug: draw-a-handball-court-with-ggplot
+categories:
+  - R
+  - handball
+  - visualization
+tags:
+  - ggplot
+  - handball
+  - rstats
+---
+
+
+The strategy to draw a court is to define the different lines and use geom_path to draw each segment.
+For circles, we use the following function to create the x-y coordinates. 
+For lines, we just define x-y start and end coordinates.
+
+```{r}
+library(ggplot2)
+
+draw_circle <- function(center = c(0, 0),
+                        diameter = 1, 
+                        npoints = 12000, 
+                        start = 0, 
+                        end = 2){
+  
+  tt <- seq(start*pi, end*pi, length.out = npoints)
+  
+  data.frame(
+    x = center[1] + diameter / 2 * cos(tt),
+    y = center[2] + diameter / 2 * sin(tt)
+  )
+
+}
+
+```
+
+Now, we can define each line of the court. 
+Our court dimensions go from -20 to 20 by -10 to 10, which would be 40x20. 
+
+
+```{r}
+
+side_and_goal_lines <- 
+  data.frame(x = c(-20, 20, 20, -20, -20),
+             y = c(-10, -10, 10, 10, -10))
+
+center_line <- 
+  data.frame(x = c(0, 0),
+             y = c(-10, 10))
+
+goal1 <- 
+  data.frame(x = c(-20, -20),
+             y = c(-1.5, 1.5))
+
+goal2 <- 
+  data.frame(x = c(20, 20),
+             y = c(-1.5, 1.5))
+
+
+front6_1 <- 
+  data.frame(x = c(-14, -14),
+             y = c(-1.5, 1.5))
+
+front6_2 <- 
+  data.frame(x = c(14, 14),
+             y = c(-1.5, 1.5))
+
+
+quart_circle6_1_1 <- 
+  draw_circle(center = c(-20, -1.5), 
+              diameter = 12, 
+              start = 1.5, end = 2)
+
+quart_circle6_1_2 <- 
+  draw_circle(center = c(-20, 1.5), 
+              diameter = 12, 
+              start = 0, end = 0.5)
+
+quart_circle6_2_1 <- 
+  draw_circle(center = c(20, -1.5), 
+              diameter = 12, 
+              start = 1, end = 1.5)
+
+quart_circle6_2_2 <- 
+  draw_circle(center = c(20, 1.5), 
+              diameter = 12,
+              start = 0.5, end = 1)
+
+
+# Both 9m circles will be linked by a straight 3m line 
+
+free_thr9_1_1 <- 
+  draw_circle(center = c(-20, -1.5),
+              diameter = 18, 
+              start = 1.62, end = 2)
+
+free_thr9_1_2 <- 
+  draw_circle(center = c(-20, 1.5),
+              diameter = 18, 
+              start = 0, end = 0.38)
+
+free_thr_compl1 <- rbind(free_thr9_1_1, free_thr9_1_2)
+
+
+# Both 9m circles will be linked by a straight 3m line 
+
+free_thr9_2_1 <- 
+  draw_circle(center = c(20, -1.5),
+              diameter = 18, 
+              start = 1, end = 1.38)
+
+free_thr9_2_2 <- 
+  draw_circle(center = c(20, 1.5), 
+              diameter = 18, 
+              start = 0.62, end = 1)
+
+free_thr_compl2 <- rbind(free_thr9_2_2, free_thr9_2_1)
+
+
+
+goal_restr_1 <-
+  data.frame(x = c(-16, -16),
+             y = c(-0.075, 0.075))
+
+goal_restr_2 <-
+  data.frame(x = c(16, 16),
+             y = c(-0.075, 0.075))
+
+sevenm_1 <- 
+  data.frame(x = c(-13, -13),
+             y = c(-0.5, 0.5))
+
+sevenm_2 <-
+  data.frame(x = c(13, 13),
+             y = c(-0.5, 0.5))
+
+substitution_1 <- 
+  data.frame(x = c(-4.5, -4.5),
+             y = c(-10.15, -9.85))
+
+substitution_2 <- 
+  data.frame(x = c(4.5, 4.5),
+             y = c(-10.15, -9.85))
+
+side_and_goal_lines_half <- 
+  data.frame(x = c(5, 20, 20, 5, 5),
+             y = c(-10, -10, 10, 10, -10))
+
+six_m1 <- rbind(quart_circle6_1_1, quart_circle6_1_2)
+
+six_m2 <- rbind(quart_circle6_2_1, quart_circle6_2_2)
+
+
+```
+
+We are ready to pass these lines to a ggplot for a complete court.
+Let's create a function so we can make small modification to the plot with some parameters and to make easy to calls to our plot creation
+
+As parameters:
+
+- vertical: If we want to see a vertical plot
+
+- flip: Flips the plot 180°
+
+- court_color: Parameter as a hex code or ggplot color name (for example: 'orange' or '#cfa03c') for the court
+
+- area_color: Parameter as a hex code or ggplot color name for the 6-meter area. 
+
+- lines_color: Parameter as a hex code or ggplot color name for all the lines 
+
+```{r}
+court <- function(vertical = FALSE, flip = FALSE, court_color = '#1871c9', 
+                  area_color = '#d1b111', lines_color = 'white'){
+
+  make_flip <- NULL
+  
+  if(flip) make_flip <- '-'
+  
+  type_of_plot <- 
+    ifelse(vertical,
+           paste0('aes(y, ', make_flip, 'x)'),
+           paste0('aes(', make_flip, 'x, ', 'y)'))
+  
+  
+ plot <- ggplot(mapping = eval(parse(text = type_of_plot))) +
+    geom_path(data = side_and_goal_lines, size = 1, color = lines_color) +
+    geom_path(data = goal1, color = 'red', size = 1.5) +
+    geom_path(data = goal2, color = 'red', size = 1.5) +
+    geom_polygon(data = side_and_goal_lines, fill = court_color) +
+    geom_path(data = center_line, size = 1, color = lines_color) +
+    geom_polygon(data = six_m1, fill = area_color) +
+    geom_polygon(data = six_m2, fill = area_color) +
+    geom_path(data = front6_1, size = 1, color = lines_color) +
+    geom_path(data = front6_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_1_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_1_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_2, size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl1, linetype = 'dashed', size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1, color = lines_color) +
+    geom_path(data = goal_restr_1, size = 1, color = lines_color) +
+    geom_path(data = goal_restr_2, size = 1, color = lines_color) +
+    geom_path(data = sevenm_1, size = 1, color = lines_color) +
+    geom_path(data = sevenm_2, size = 1, color = lines_color) +
+    geom_path(data = substitution_1, size = 1, color = lines_color) +
+    geom_path(data = substitution_2, size = 1, color = lines_color) +
+    coord_fixed() + # We want to maintain the 40x20 proportion
+    theme_void()
+  
+  return(plot)
+}
+
+```
+
+And half a court with the same parameters. 
+
+```{r}
+half_court <- function(vertical = TRUE, flip = FALSE, court_color = '#1871c9', 
+                       area_color = '#d1b111', lines_color = 'white'){
+  
+  make_flip <- NULL
+  
+  if(flip) make_flip <- '-'
+  
+  type_of_plot <- 
+    ifelse(vertical,
+           paste0('aes(y, ', make_flip, 'x)'),
+           paste0('aes(', make_flip, 'x, ', 'y)'))
+  
+  
+  plot <- ggplot(mapping = eval(parse(text = type_of_plot))) +
+    geom_path(data = side_and_goal_lines_half, size = 1, color = lines_color) +
+    geom_polygon(data = side_and_goal_lines_half, fill = court_color) +
+    geom_polygon(data = six_m2, fill = area_color) +
+    geom_path(data = goal2, color = 'red', size = 1.5) +
+    geom_path(data = front6_2, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_1, size = 1, color = lines_color) +
+    geom_path(data = quart_circle6_2_2, size = 1, color = lines_color) +
+    geom_path(data = free_thr_compl2, linetype = 'dashed', size = 1, color = lines_color) +
+    geom_path(data = goal_restr_2, size = 1, color = lines_color) +
+    geom_path(data = sevenm_2, size = 1, color = lines_color) +
+    coord_fixed() +
+    theme_void()
+  
+  return(plot)
+}
+```
+
+Now we draw a court:
+```{r}
+court()
+
+```
+
+And half a court: 
+
+
+```{r}
+half_court(vertical = TRUE, flip = TRUE, 
+           court_color = 'orange',
+           area_color = 'darkgreen', 
+           lines_color = 'darkblue')
+```
+
+As the code to generate the court in ggplot ends with a theme_void() call at the end of our function, we can extend this plot and add other information on top. 
+
+For example, let's generate some data on where some shots were taken and if they were a goal or not:
+
+```{r}
+shots <-
+  data.frame(x = c(-13, -12, 11, -11, 9.5),
+             y = c(2, 5, -3, -1, 0),
+             goal = c(1, 0, 1, 1, 0))
+```
+
+
+Now we just generate out court and then add our new layer.
+```{r}
+court() +
+      geom_point(data = shots, aes(x, y),
+                 color = ifelse(shots$goal == 1, 'Green', 'Red'),
+                 size = 4)
+```
+
+
+
+
+
+

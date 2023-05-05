@@ -1,5 +1,5 @@
 baseurl: https://telaroz.netlify.app/
-theme: hugo-nederburg-theme
+theme: hugo-theme-den
 languageCode: en-us
 disqusShortname: ''
 googleAnalytics: ''
